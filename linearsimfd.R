@@ -1,15 +1,15 @@
 linearsimfd <- function (x, b, ci = 0.95, constant = 1, xpre = NULL) 
 {
-    mm <- modelMatrixHelper(x, b, constant, nscen, which.cf="x")
+    if (is.null(x)) {
+      stop("x is missing.")
+    }
+    mm <- modelMatrixHelper(x, b, constant, which.cf="x")
 
     if (is.null(x$xpre)) {
-      if (is.null(xpre)) {
-        stop("xpre is missing.")
-      } else {
-	  x$xpre <- modelMatrixHelper(x=xpre, b, constant, nscen)
-      }
+      if (is.null(xpre)) stop("xpre is missing.")
+      x$xpre <- modelMatrixHelper(x=xpre, b, constant)
     } else {
-      xpre <- modelMatrixHelper(x, b, constant, nscen, which.cf="xpre")
+      xpre <- modelMatrixHelper(x, b, constant, which.cf="xpre")
     }
 
     x <- mm

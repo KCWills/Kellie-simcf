@@ -6,7 +6,7 @@
 # or
 # modelMatrixHelper(x=x.cf, b, constant, nscen, which.cf="xpre")
 
-modelMatrixHelper <- function(x, b, constant, nscen, which.cf="x")
+modelMatrixHelper <- function(x, b, constant, nscen=1, which.cf="x")
 {
   if ( !is.character(which.cf) ) stop("which.cf must be a string")
     
@@ -39,19 +39,20 @@ modelMatrixHelper <- function(x, b, constant, nscen, which.cf="x")
       
   if (!is.matrix(x)) {		
     if (is.matrix(b)) {		
-      x <- t(x)
+      mm <- t(x)
       if (!is.na(constant)) {
-        mm <- append(x, 1, constant - 1)
+        mm <- append(mm, 1, constant - 1)
       }
     } else {
-      x <- as.matrix(x)
+      mm <- as.matrix(x)
       if (!is.na(constant)) {
-        mm <- appendmatrix(x, rep(1, nrow(x)), constant)
+        mm <- appendmatrix(mm, rep(1, nrow(x)), constant)
       }
     }
   } else {
+    mm <- x
     if (!is.na(constant)) {
-      mm <- appendmatrix(x, rep(1, nrow(x)), constant)
+      mm <- appendmatrix(mm, rep(1, nrow(x)), constant)
     }
   }
     

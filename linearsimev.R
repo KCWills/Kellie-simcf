@@ -1,7 +1,20 @@
-linearsimev <- function (x, b, ci = 0.95, constant = 1, sigma2 = NULL, sims = 10, 
-    save = FALSE, nscen = 1) 
+linearsimev <- function (x, b, formula=NULL, ci = 0.95, constant = 1, sigma2 = NULL, 
+    sims = 10, save = FALSE, nscen = 1) 
 {
-    x <- modelMatrixHelper(x, b, constant, nscen, which.cf="x")
+    if (is.null(formula)) {
+        x <- modelMatrixHelper(x, b, constant, nscen, which.cf="x")
+    } else {
+	  tl <- attributes(terms(formula))$term.labels
+	  rhs <- paste(tl, collapse = " + ")
+	  rhs <- as.formula(paste("~ ", rhs))
+	  if (is.null(x)) {
+		mf <- model.frame(rhs) 
+	  } else { 
+        	x <- as.data.frame(x)
+        	mf <- model.frame(rhs, x)
+	  } 
+        x <- modelMatrixHelper(mf, b, constant)
+    }
 
     esims <- nrow(as.matrix(b))
     if (!is.null(sigma2)) {
